@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock and Crypto Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4">Track Your Holdings</h1>
+        <form id="holdingForm">
+            <div class="mb-4">
+                <label class="block text-gray-700">Name:</label>
+                <input type="text" id="name" class="w-full px-3 py-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Type:</label>
+                <select id="type" class="w-full px-3 py-2 border border-gray-300 rounded">
+                    <option value="stock">Stock</option>
+                    <option value="crypto">Crypto</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">User:</label>
+                <input type="text" id="user" class="w-full px-3 py-2 border border-gray-300 rounded">
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white px-3 py-2 rounded">Add Holding</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('holdingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const type = document.getElementById('type').value;
+            const user = document.getElementById('user').value;
+
+            const response = await fetch('/api/holdings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, type, user })
+            });
+
+            const data = await response.json();
+            alert('Holding added: ' + JSON.stringify(data));
+        });
+    </script>
+</body>
+</html>
