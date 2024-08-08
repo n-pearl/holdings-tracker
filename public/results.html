@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Analysis Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4">Analysis Results</h1>
+        <div id="resultsContainer" class="space-y-4"></div>
+        <button onclick="goBack()" class="mt-4 w-full bg-blue-500 text-white p-2 rounded">Back</button>
+    </div>
+    <script>
+        async function fetchResults() {
+            const params = new URLSearchParams(window.location.search);
+            const username = params.get('username');
+            const holdingName = params.get('holdingName');
+            const holdingType = params.get('holdingType');
+
+            try {
+                const response = await fetch(`/api/news?username=${username}&holdingName=${holdingName}`);
+                const results = await response.json();
+                const resultsContainer = document.getElementById('resultsContainer');
+
+                resultsContainer.innerHTML = '';
+
+                results.forEach(result => {
+                    const resultElement = document.createElement('div');
+                    resultElement.className = 'p-4 bg-gray-200 rounded';
+
+                    if (result.articles && result.articles.length > 0) {
+                        resultElement.innerHTML = `
+                            <h2 class="text-xl font-semibold">${result.holding}</h2>
+                            <canvas id="chart-${result.holding}" class="mb-4"></canvas>
+                            <ul class="list-disc list-inside">
+                                ${result.articles.map(article => `<li>${article.title} - ${article.sentiment}</li>`).join('')}
+                            </ul>
+                        `;
+                        renderChart(`chart-${result.holding}`, result.performanceData);
+                    } else {
+                        resultElement.innerHTML = `
+                            <h2 class="text-xl font-semibold">No noteworthy news found for ${result.holding}.</h2>
+                            <p class="text-red-500">No performance data available.</p>
+                        `;
+                    }
+
+                    resultsContainer.appendChild(resultElement);
+                });
+
+            } catch (error) {
+                console.error('Error fetching results:', error);
+                alert('An error occurred while fetching the results.');
+            }
+        }
+
+        async function fetchPerformanceData(holding, type, symbol, name) {
+            try {
+                const response = await fetch(`/api/performance?type=${type}&symbol=${symbol}&name=${name}`);
+                const data = await response.json();
+
+                if (data && data['Time Series (60min)']) {
+                    return Object.keys(data['Time Series (60min)']).map(time => ({
+                        time,
+                        value: parseFloat(data['Time Series (60min)'][time]['4. close'])
+                    }));
+                } else if (data && data.length > 0) {
+                    return data.map(item => ({
+                        time: item.last_updated,
+                        value: item.current_price
+                    }));
+                } else {
+                    throw new Error('No time series data found');
+                }
+            } catch (error) {
+                console.error('Error fetching performance data:', error);
+                return [];
+            }
+        }
+
+        function renderChart(canvasId, data) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => item.time),
+                    datasets: [{
+                        label: 'Performance',
+                        data: data.map(item => item.value),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { type: 'time', time: { unit: 'minute' } },
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function goBack() {
+            window.location.href = '/';
+        }
+
+        fetchResults();
+    </script>
+</body>
+</html>

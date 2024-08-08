@@ -1,39 +1,69 @@
 const express = require('express');
-const axios = require('axios');
-const Sentiment = require('sentiment');
 const router = express.Router();
-const Holding = require('../models/Holding');
+const User = require('../models/Users');
+const { getStockPerformance, getCryptoPerformance } = require('../routes/performance');
 
-const sentiment = new Sentiment();
+router.post('/add', async (req, res) => {
+    const { username, holdingName, holdingType, holdingSymbol } = req.body;
 
-router.post('/', async (req, res) => {
-    const { name, type, user } = req.body;
+    try {
+        let user = await User.findOne({ username });
 
-    const newHolding = new Holding({ name, type, user });
-    await newHolding.save();
+        if (!user) {
+            user = new User({ username, holdings: [] });
+        }
 
-    res.json(newHolding);
+        const holding = user.holdings.find(
+            h => h.name.toLowerCase() === holdingName.toLowerCase()
+        );
+
+        if (!holding) {
+            user.holdings.push({ name: holdingName, type: holdingType, symbol: holdingType === 'stock' ? holdingSymbol : holdingName.toLowerCase() });
+        } else {
+            return res.status(400).json({ message: 'Holding already exists' });
+        }
+
+        await user.save();
+        res.status(200).json({ message: 'Holding added successfully' });
+    } catch (error) {
+        console.error('Error adding holding:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 });
 
 router.get('/analyze', async (req, res) => {
-    const holdings = await Holding.find();
-    const results = [];
+    const { username } = req.query;
 
-    for (const holding of holdings) {
-        const news = await axios.get(`https://newsapi.org/v2/everything?q=${holding.name}&apiKey=${process.env.NEWS_API_KEY}`);
-        const articles = news.data.articles;
+    try {
+        const user = await User.findOne({ username });
 
-        let sentimentScore = 0;
-        articles.forEach(article => {
-            const result = sentiment.analyze(article.title + ' ' + article.description);
-            sentimentScore += result.score;
-        });
+        if (!user || user.holdings.length === 0) {
+            return res.status(200).json([]);
+        }
 
-        const avgSentiment = sentimentScore / articles.length;
-        results.push({ holding, avgSentiment });
+        const results = await Promise.all(user.holdings.map(async holding => {
+            let performanceData;
+            try {
+                if (holding.type === 'stock') {
+                    performanceData = await getStockPerformance(holding.symbol);
+                } else if (holding.type === 'crypto') {
+                    performanceData = await getCryptoPerformance(holding.name.toLowerCase());
+                }
+
+                const avgSentiment = 0;  // Placeholder for sentiment analysis logic
+                const articles = [];  // Placeholder for news articles
+
+                return { holding, avgSentiment, articles, performanceData };
+            } catch (error) {
+                return { holding, avgSentiment: 0, articles: [], performanceData: null };
+            }
+        }));
+
+        res.status(200).json(results);
+    } catch (error) {
+        console.error('Error analyzing holdings:', error);
+        res.status(500).json({ message: 'Server error' });
     }
-
-    res.json(results);
 });
 
 module.exports = router;
