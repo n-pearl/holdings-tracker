@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const HoldingSchema = new mongoose.Schema({
     name: { type: String, required: true },
     type: { type: String, required: true },
-    symbol: { type: String, required: true }
+    symbol: { type: String }
 });
 
 const UserSchema = new mongoose.Schema({

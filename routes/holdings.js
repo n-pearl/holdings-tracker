@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/Users');
-const { getStockPerformance, getCryptoPerformance } = require('../routes/performance');
+const { fetchNewsAndAnalyze } = require('../routes/newsAnalysis');
+const axios = require('axios'); // Import axios for making HTTP requests
 
 router.post('/add', async (req, res) => {
     const { username, holdingName, holdingType, holdingSymbol } = req.body;
@@ -43,18 +44,24 @@ router.get('/analyze', async (req, res) => {
 
         const results = await Promise.all(user.holdings.map(async holding => {
             let performanceData;
+            let analysisResults;
+
             try {
-                if (holding.type === 'stock') {
-                    performanceData = await getStockPerformance(holding.symbol);
-                } else if (holding.type === 'crypto') {
-                    performanceData = await getCryptoPerformance(holding.name.toLowerCase());
-                }
+                const response = await axios.get('http://localhost:5000/api/performance', {
+                    params: {
+                        type: holding.type,
+                        symbol: holding.symbol,
+                        name: holding.name.toLowerCase()
+                    }
+                });
 
-                const avgSentiment = 0;  // Placeholder for sentiment analysis logic
-                const articles = [];  // Placeholder for news articles
+                performanceData = response.data;
 
-                return { holding, avgSentiment, articles, performanceData };
+                analysisResults = await fetchNewsAndAnalyze(holding); // Analyze news and sentiment
+
+                return { holding, ...analysisResults, performanceData };
             } catch (error) {
+                console.error(`Error analyzing holding ${holding.name}:`, error);
                 return { holding, avgSentiment: 0, articles: [], performanceData: null };
             }
         }));
