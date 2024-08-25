@@ -1,0 +1,87 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e1effd, #f3f8fd);
+    color: #2b4a69;
+}
+
+header {
+    background-color: #e1effd;
+    padding: 20px;
+    text-align: center;
+}
+
+header img {
+    width: 150px;
+    margin: auto;
+}
+
+h1, h2, h3 {
+    color: #2b4a69;
+}
+
+button {
+    background: linear-gradient(135deg, #6ba9d9, #4a7bbd);
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #4a7bbd, #6ba9d9);
+}
+
+/* Cards and Containers */
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.card h2 {
+    margin-bottom: 20px;
+}
+
+.card p {
+    line-height: 1.6;
+}
+
+.card button {
+    width: 100%;
+}
+
+/* Menu Bar */
+.navbar {
+    background-color: #e1effd;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+    color: #2b4a69;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+}
+
+.navbar a:hover {
+    background-color: #c0d6ef;
+}
+
+/* Logo Style */
+.logo {
+    font-size: 2rem;
+    color: #6ba9d9;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}

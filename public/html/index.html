@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/public/css/style.css" rel="stylesheet">
+    <title>Sniper - Add a Holding</title>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">Sniper</a>
+        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    </nav>
+
+    <main>
+        <div class="card">
+            <h2>Add a Holding</h2>
+            <form id="addHoldingForm">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+
+                <label for="holdingName">Holding Name</label>
+                <input type="text" id="holdingName" required>
+
+                <label for="holdingType">Holding Type</label>
+                <select id="holdingType" required>
+                    <option value="stock">Stock</option>
+                    <option value="crypto">Crypto</option>
+                </select>
+
+                <label for="holdingSymbol">Stock Symbol</label>
+                <input type="text" id="holdingSymbol" required>
+
+                <button type="submit">Add and Check Holding</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
