@@ -1,87 +1,149 @@
-/* General Styles */
+/* Base styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #e1effd, #f3f8fd);
-    color: #2b4a69;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, #e0e8f9, #f7faff);
+    color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s, color 0.3s;
 }
 
 header {
-    background-color: #e1effd;
-    padding: 20px;
-    text-align: center;
-}
-
-header img {
-    width: 150px;
-    margin: auto;
-}
-
-h1, h2, h3 {
-    color: #2b4a69;
-}
-
-button {
-    background: linear-gradient(135deg, #6ba9d9, #4a7bbd);
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-}
-
-button:hover {
-    background: linear-gradient(135deg, #4a7bbd, #6ba9d9);
-}
-
-/* Cards and Containers */
-.card {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: 20px 0;
-}
-
-.card h2 {
-    margin-bottom: 20px;
-}
-
-.card p {
-    line-height: 1.6;
-}
-
-.card button {
-    width: 100%;
-}
-
-/* Menu Bar */
-.navbar {
-    background-color: #e1effd;
-    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    background: #ffffff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 60px;
 }
 
-.navbar a {
-    color: #2b4a69;
-    font-weight: bold;
-    text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    transition: background 0.3s ease-in-out;
+header img.logo {
+    height: 50px;
+    width: auto;
 }
 
-.navbar a:hover {
-    background-color: #c0d6ef;
+/* Shortened Dark Mode Button */
+header .toggle-dark-mode {
+    padding: 5px 10px; /* Minimal padding */
+    font-size: 0.75em;
+    width: auto; /* Wraps text content */
+    align-self: center;
+    margin-left: auto; /* Pushes button to the far right */
+    white-space: nowrap; /* Prevents text wrapping */
+    text-align: center;
 }
 
-/* Logo Style */
-.logo {
-    font-size: 2rem;
-    color: #6ba9d9;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+
+header .toggle-dark-mode:hover {
+    background: linear-gradient(to right, #5c6ac4, #3b5b99);
+}
+
+.container {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    margin: 100px auto 0 auto; /* Adjusted for top margin to avoid header overlap */
+}
+
+h1 {
+    font-size: 2em;
+    color: #2a4365;
+    margin-bottom: 20px;
+}
+
+/* Standardized Input Fields and Labels */
+input[type="text"],
+select {
+    width: 100%; /* Make input fields full width within their container */
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #b3c7e6;
+    border-radius: 5px;
+    background: #ffffff;
+    color: #1a1a1a;
+    transition: border-color 0.3s;
+    box-sizing: border-box; /* Ensure padding does not affect overall width */
+}
+
+input[type="text"]:focus,
+select:focus {
+    border-color: #5c6ac4;
+    outline: none;
+}
+
+label {
+    font-weight: bold; /* Make labels bold for better visibility */
+    margin-bottom: 5px;
+    display: block;
+    color: #2a4365; /* Match label color with the theme */
+}
+
+/* Button Margin Adjustments */
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(to right, #89c2d9, #5c6ac4);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 1em;
+    margin-bottom: 10px; /* Add margin to separate buttons */
+}
+
+button:hover {
+    background: linear-gradient(to center, #5c6ac4, #89c2d9);
+}
+
+/* Dark Mode styles */
+body.dark-mode {
+    background: #1a1a1a;
+    color: #f1f1f1;
+}
+
+body.dark-mode header {
+    background: #2a2a2a;
+}
+
+body.dark-mode header img.logo {
+    filter: brightness(0.8);
+}
+
+body.dark-mode header .toggle-dark-mode {
+    background: linear-gradient(to center, #5c6ac4, #89c2d9);
+}
+
+body.dark-mode .container {
+    background: #2a2a2a;
+}
+
+body.dark-mode h1 {
+    color: #89c2d9;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode select {
+    background: #333333;
+    border-color: #5c6ac4;
+    color: #f1f1f1;
+}
+
+body.dark-mode input[type="text"]:focus,
+body.dark-mode select:focus {
+    border-color: #89c2d9;
+}
+
+body.dark-mode button {
+    background: linear-gradient(to right, #5c6ac4, #89c2d9);
 }

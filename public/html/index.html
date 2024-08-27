@@ -3,38 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/public/css/style.css" rel="stylesheet">
     <title>Sniper - Add a Holding</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <header class="flex justify-between items-center p-4 bg-iceberg dark:bg-gray-900 text-steel-800 dark:text-gray-100">
+        <img src="../images/sniper_logo-removebg-preview.png" alt="Sniper Logo" class="logo">
+        <button id="toggleDarkModeButton" class="bg-steel-800 dark:bg-gray-700 text-white px-4 py-2 rounded-lg">Toggle Dark Mode</button>
+    </header>
 
-    <nav class="navbar">
-        <a href="index.html" class="logo">Sniper</a>
-        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
-    </nav>
-
-    <main>
-        <div class="card">
-            <h2>Add a Holding</h2>
-            <form id="addHoldingForm">
-                <label for="username">Username</label>
-                <input type="text" id="username" required>
-
-                <label for="holdingName">Holding Name</label>
-                <input type="text" id="holdingName" required>
-
-                <label for="holdingType">Holding Type</label>
-                <select id="holdingType" required>
+    <main class="container mx-auto mt-10">
+        <h2 class="text-3xl font-bold text-steel-800 dark:text-gray-100 mb-6">Add a Holding</h2>
+        <form id="holdingForm" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div class="mb-4">
+                <label for="username" class="block text-steel-800 dark:text-gray-100">Username</label>
+                <input type="text" id="username" name="username" class="input-field" placeholder="Enter your username">
+            </div>
+            <div class="mb-4">
+                <label for="holdingName" class="block text-steel-800 dark:text-gray-100">Holding Name</label>
+                <input type="text" id="holdingName" name="holdingName" class="input-field" placeholder="Enter holding name">
+            </div>
+            <div class="mb-4">
+                <label for="holdingType" class="block text-steel-800 dark:text-gray-100">Holding Type</label>
+                <select id="holdingType" name="holdingType" class="input-field">
                     <option value="stock">Stock</option>
                     <option value="crypto">Crypto</option>
                 </select>
-
-                <label for="holdingSymbol">Stock Symbol</label>
-                <input type="text" id="holdingSymbol" required>
-
-                <button type="submit">Add and Check Holding</button>
-            </form>
-        </div>
+            </div>
+            <div class="mb-4">
+                <label for="stockSymbol" class="block text-steel-800 dark:text-gray-100">Stock Symbol</label>
+                <input type="text" id="stockSymbol" name="stockSymbol" class="input-field" placeholder="Enter stock symbol">
+            </div>
+            <button type="submit" class="bg-steel-800 text-white px-4 py-2 rounded-lg w-full mb-4">Add and Check Holding</button>
+            <button id="checkAllHoldingsButton" type="submit" class="bg-steel-800 text-white px-4 py-2 rounded-lg w-full">Check All My Holdings</button>
+        </form>
     </main>
+
+    <script src="../javascript/index.js"></script>
 </body>
 </html>

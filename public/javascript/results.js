@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
     try {
+        const username = 'npearl'; // Replace with dynamic username if needed
         const response = await fetch(`/api/analyze?username=${username}`);
         if (!response.ok) {
             throw new Error(`Error fetching data: ${response.statusText}`);
@@ -92,7 +93,7 @@ function renderChart(canvasId, performanceData) {
                 tooltip: {
                     callbacks: {
                         label: function (tooltipItem) {
-                            return `Closing: $${tooltipItem.raw}`;
+                            return `Closing: $${tooltipItem.raw.toFixed(2)}`;
                         }
                     }
                 }
