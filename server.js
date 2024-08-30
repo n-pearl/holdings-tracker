@@ -27,7 +27,7 @@ const User = mongoose.model('User', userSchema);
 // Utility function to fetch news articles
 async function fetchNewsArticles(holding) {
   try {
-    const response = await axios.get(`https://newsapi.org/v2/everything?q=${holding.name}&apiKey=${process.env.NEWS_API_KEY}`);
+    const response = await axios.get(`https://newsapi.org/v2/everything?q=${holding.name}&apiKey=${process.env.NEWS_API_KEY}&language=en`);
     return response.data.articles.map(article => ({
       title: article.title,
       sentiment: 'neutral' // Placeholder for sentiment analysis logic

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sniper - Holdings Results</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header class="flex justify-between items-center p-4 bg-iceberg dark:bg-gray-900 text-steel-800 dark:text-gray-100">
@@ -14,8 +15,8 @@
 
     <main class="container mx-auto mt-10">
         <h2 class="text-3xl font-bold text-steel-800 dark:text-gray-100 mb-6">Your Holdings</h2>
-        <div id="resultsContainer"></div>
-    </main>
+        <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </main>     
 
     <script src="../javascript/results.js"></script>
 </body>

@@ -15,12 +15,11 @@ header {
     padding: 10px 20px;
     background: #ffffff;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
     z-index: 1000;
-    height: 60px;
 }
 
 header img.logo {
@@ -28,20 +27,42 @@ header img.logo {
     width: auto;
 }
 
-/* Shortened Dark Mode Button */
-header .toggle-dark-mode {
-    padding: 5px 10px; /* Minimal padding */
-    font-size: 0.75em;
-    width: auto; /* Wraps text content */
-    align-self: center;
-    margin-left: auto; /* Pushes button to the far right */
-    white-space: nowrap; /* Prevents text wrapping */
-    text-align: center;
+/* Updated Dark Mode Button */
+#toggleDarkModeButton {
+    padding: 8px 16px;
+    background: linear-gradient(to right, #89c2d9, #5c6ac4);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 20%;
 }
 
-
-header .toggle-dark-mode:hover {
+#toggleDarkModeButton:hover {
     background: linear-gradient(to right, #5c6ac4, #3b5b99);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#toggleDarkModeButton:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode styles for the button */
+body.dark-mode #toggleDarkModeButton {
+    background: linear-gradient(to right, #5c6ac4, #89c2d9);
+    color: #ffffff;
+}
+
+body.dark-mode #toggleDarkModeButton:hover {
+    background: linear-gradient(to right, #3b5b99, #5c6ac4);
 }
 
 .container {
@@ -49,22 +70,33 @@ header .toggle-dark-mode:hover {
     border-radius: 15px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    margin: 100px auto 0 auto; /* Adjusted for top margin to avoid header overlap */
+    width: 90%;
+    max-width: 800px;
+    margin: 80px auto 20px;
 }
 
 h1 {
     font-size: 2em;
     color: #2a4365;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-/* Standardized Input Fields and Labels */
+/* Form styles */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #2a4365;
+}
+
 input[type="text"],
 select {
-    width: 100%; /* Make input fields full width within their container */
+    width: 100%;
     padding: 12px;
     margin-bottom: 15px;
     border: 2px solid #b3c7e6;
@@ -72,23 +104,15 @@ select {
     background: #ffffff;
     color: #1a1a1a;
     transition: border-color 0.3s;
-    box-sizing: border-box; /* Ensure padding does not affect overall width */
+    box-sizing: border-box;
 }
 
 input[type="text"]:focus,
 select:focus {
-    border-color: #5c6ac4;
+    border-color: #b3c7e6;
     outline: none;
 }
 
-label {
-    font-weight: bold; /* Make labels bold for better visibility */
-    margin-bottom: 5px;
-    display: block;
-    color: #2a4365; /* Match label color with the theme */
-}
-
-/* Button Margin Adjustments */
 button {
     width: 100%;
     padding: 12px;
@@ -99,11 +123,11 @@ button {
     cursor: pointer;
     transition: background 0.3s;
     font-size: 1em;
-    margin-bottom: 10px; /* Add margin to separate buttons */
+    margin-bottom: 10px;
 }
 
 button:hover {
-    background: linear-gradient(to center, #5c6ac4, #89c2d9);
+    background: linear-gradient(to right, #5c6ac4, #89c2d9);
 }
 
 /* Dark Mode styles */
@@ -114,14 +138,6 @@ body.dark-mode {
 
 body.dark-mode header {
     background: #2a2a2a;
-}
-
-body.dark-mode header img.logo {
-    filter: brightness(0.8);
-}
-
-body.dark-mode header .toggle-dark-mode {
-    background: linear-gradient(to center, #5c6ac4, #89c2d9);
 }
 
 body.dark-mode .container {
@@ -146,4 +162,99 @@ body.dark-mode select:focus {
 
 body.dark-mode button {
     background: linear-gradient(to right, #5c6ac4, #89c2d9);
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    #toggleDarkModeButton {
+        margin-top: 10px;
+    }
+}
+
+/* Style the results container */
+#resultsContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-rows: auto;
+    grid-row-gap: 1.5em;
+    grid-column-gap: 1.5em;
+}
+
+/* Make the card borders more visible */
+#resultsContainer .card {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 2px solid #b3c7e6;
+}
+
+/* Style the toggle articles button */
+.toggle-articles {
+    padding: 0.2rem;
+    background: linear-gradient(to right, #89c2d9, #5c6ac4);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px; /* Place it to the left of the articles list */
+    margin-top: 0; /* Remove extra whitespace */
+}
+
+.toggle-articles:hover {
+    background: linear-gradient(to right, #5c6ac4, #3b5b99);
+}
+
+.toggle-articles svg {
+    width: 12px;
+    height: 12px;
+    fill: white; /* Make the icon white to fit the theme */
+    transition: transform 0.3s;
+}
+
+.toggle-articles.rotate svg {
+    transform: rotate(180deg);
+}
+
+/* Article list styling */
+.articles-list {
+    margin: 0; /* Remove extra margin */
+    padding: 0;
+    list-style-type: none; /* Remove default bullets */
+    font-size: 0.9em; /* Make the text a bit smaller */
+    line-height: 1.4em;
+    color: #333;
+    border-left: 2px solid #89c2d9;
+    padding-left: 10px;
+}
+
+.articles-list li {
+    margin-bottom: 0.5em;
+}
+
+.articles-list li::before {
+    content: "•"; /* Custom bullet point */
+    color: #89c2d9;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
 }

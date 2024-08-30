@@ -1,43 +1,44 @@
 document.addEventListener('DOMContentLoaded', async function () {
     try {
-        const username = 'npearl'; // Replace with dynamic username if needed
-        const response = await fetch(`/api/analyze?username=${username}`);
-        if (!response.ok) {
-            throw new Error(`Error fetching data: ${response.statusText}`);
+        // Retrieve the holdings data from sessionStorage
+        const holdingsData = JSON.parse(sessionStorage.getItem('holdingsData'));
+        if (!holdingsData) {
+            throw new Error('No holdings data found');
         }
 
-        const results = await response.json();
         const resultsContainer = document.getElementById('resultsContainer');
+        resultsContainer.innerHTML = ''; // Clear any previous content
 
-        results.forEach(result => {
+        holdingsData.forEach(result => {
+            // Create a new card for each holding
             const resultElement = document.createElement('div');
-            resultElement.className = 'flex flex-wrap justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg mb-6';
+            resultElement.className = 'card';
 
-            // Create the chart container
+            // Create the chart container within the card
             const chartContainer = document.createElement('div');
-            chartContainer.className = 'w-1/2 p-4';
+            chartContainer.className = 'p-4';
             chartContainer.innerHTML = `
-                <h2 class="text-xl font-bold text-steel-800 dark:text-gray-100">${result.holding.name || result.holding.symbol}</h2>
+                <h2 class="text-xl font-bold text-steel-800 dark:text-gray-100 mb-4">${result.holding.name || result.holding.symbol}</h2>
                 <canvas id="chart-${result.holding.symbol}" class="mb-4"></canvas>
             `;
             resultElement.appendChild(chartContainer);
 
-            // Create the articles container
+            // Create the articles container within the card
             const articlesContainer = document.createElement('div');
-            articlesContainer.className = 'w-1/2 p-4';
+            articlesContainer.className = 'p-4 flex items-start';
             articlesContainer.innerHTML = `
-                <button class="toggle-articles p-2 bg-iceberg dark:bg-gray-700 rounded-lg text-steel-800 dark:text-gray-100">
-                    <span>Show Articles</span>
-                    <svg class="w-6 h-6 inline-block transform rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <button class="toggle-articles">
+                    <svg class="w-4 h-4 transform rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
-                <ul class="articles-list list-disc list-inside mt-4 hidden text-gray-700 dark:text-gray-300">
+                <ul class="articles-list hidden text-gray-700 dark:text-gray-300">
                     ${result.articles.map(article => `<li>${article.title} - Sentiment: ${article.sentiment}</li>`).join('')}
                 </ul>
             `;
             resultElement.appendChild(articlesContainer);
 
+            // Append the card to the results container
             resultsContainer.appendChild(resultElement);
 
             // Add event listener to toggle articles visibility
@@ -45,8 +46,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const articlesList = articlesContainer.querySelector('.articles-list');
             toggleButton.addEventListener('click', () => {
                 articlesList.classList.toggle('hidden');
-                const icon = toggleButton.querySelector('svg');
-                icon.classList.toggle('rotate-180');
+                toggleButton.classList.toggle('rotate');
             });
 
             // Render the chart
