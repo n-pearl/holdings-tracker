@@ -182,17 +182,7 @@ body.dark-mode button {
     }
 }
 
-/* Style the results container */
-#resultsContainer {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    grid-template-rows: auto;
-    grid-row-gap: 1.5em;
-    grid-column-gap: 1.5em;
-}
-
-/* Make the card borders more visible */
+/* Add buffer space between cards */
 #resultsContainer .card {
     background: #ffffff;
     border-radius: 15px;
@@ -200,23 +190,64 @@ body.dark-mode button {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     border: 2px solid #b3c7e6;
+    position: relative;
+    z-index: 0;
+    margin-bottom: 20px; /* Add buffer space between cards */
 }
 
-/* Style the toggle articles button */
+/* Improved title styles for each card */
+.chart-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 1.4em; /* Increase title size */
+    color: #2b6cb0; /* Use a primary color */
+    font-weight: bold; /* Make the title bold */
+    border-bottom: 2px solid #b3c7e6; /* Add a border under the title */
+    padding-bottom: 5px; /* Add some padding under the title */
+}
+
+/* Improved title style for "Your Holdings" */
+#resultsContainer {
+    margin-top: 30px;
+}
+
+#resultsContainer > h2 {
+    font-size: 2em;
+    font-weight: bold;
+    color: #2b6cb0;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid #b3c7e6;
+    padding-bottom: 10px;
+}
+
+/* Chart container styling */
+.chart-container {
+    margin-bottom: 10px;
+}
+
+/* Adjust the collapse button style */
 .toggle-articles {
-    padding: 0.2rem;
+    padding: 0.3rem;
     background: linear-gradient(to right, #89c2d9, #5c6ac4);
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    transition: transform 0.3s, background 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 10px; /* Place it to the left of the articles list */
-    margin-top: 0; /* Remove extra whitespace */
+    margin-right: 10px;
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 2;
 }
 
 .toggle-articles:hover {
@@ -224,9 +255,9 @@ body.dark-mode button {
 }
 
 .toggle-articles svg {
-    width: 12px;
-    height: 12px;
-    fill: white; /* Make the icon white to fit the theme */
+    width: 10px;
+    height: 10px;
+    fill: white;
     transition: transform 0.3s;
 }
 
@@ -234,27 +265,37 @@ body.dark-mode button {
     transform: rotate(180deg);
 }
 
-/* Article list styling */
-.articles-list {
-    margin: 0; /* Remove extra margin */
-    padding: 0;
-    list-style-type: none; /* Remove default bullets */
-    font-size: 0.9em; /* Make the text a bit smaller */
-    line-height: 1.4em;
-    color: #333;
-    border-left: 2px solid #89c2d9;
-    padding-left: 10px;
-}
-
 .articles-list li {
     margin-bottom: 0.5em;
+    padding-right: 10px;
+    word-break: break-word;
 }
 
 .articles-list li::before {
-    content: "•"; /* Custom bullet point */
+    content: "•";
     color: #89c2d9;
     font-weight: bold;
     display: inline-block;
     width: 1em;
     margin-left: -1em;
+}
+
+
+/* Chart title styles */
+.chart-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.chart-title h2 {
+    font-size: 1.2em;
+    margin: 0;
+    color: #333;
+}
+
+/* Chart container styling */
+.chart-container {
+    margin-bottom: 10px;
 }
