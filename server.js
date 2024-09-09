@@ -63,7 +63,7 @@ async function fetchPerformanceData(holding) {
 
         return performanceData;
       } else {
-        console.error('No data found for the specified stock symbol.');
+        console.error('No data found for the specified stock symbol. Please check the symbol and try again.');
         return [];
       }
 
@@ -84,7 +84,7 @@ async function fetchPerformanceData(holding) {
 
         return performanceData;
       } else {
-        console.error('No data found for the specified cryptocurrency.');
+        console.error('No data found for the specified cryptocurrency. Please try again later.');
         return [];
       }
 
@@ -126,6 +126,33 @@ app.get('/api/analyze', async (req, res) => {
   } catch (error) {
     console.error('Error analyzing holdings:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/api/addHolding', async (req, res) => {
+  try {
+      const { username, holdingName, holdingType, stockSymbol } = req.body;
+
+      if (!username || !holdingName || !holdingType) {
+          return res.status(400).json({ error: 'Invalid input' });
+      }
+
+      // Find the user
+      let user = await User.findOne({ username });
+
+      // If user doesn't exist, create a new one
+      if (!user) {
+          user = new User({ username, holdings: [] });
+      }
+
+      // Add the new holding
+      user.holdings.push({ name: holdingName, type: holdingType, symbol: stockSymbol });
+      await user.save();
+
+      res.json({ message: 'Holding added successfully', holding: { name: holdingName, type: holdingType, symbol: stockSymbol } });
+  } catch (error) {
+      console.error('Error adding holding:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

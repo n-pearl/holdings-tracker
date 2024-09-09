@@ -140,14 +140,32 @@ body.dark-mode header {
     background: #2a2a2a;
 }
 
-body.dark-mode .container {
-    background: #2a2a2a;
+body.dark-mode #resultsContainer .card {
+    background: #333333;
+    color: #f1f1f1;
+    border-color: #444444;
 }
 
-body.dark-mode h1 {
+body.dark-mode .chart-title {
+    color: #f1f1f1;
+    border-bottom: 2px solid #444444;
+}
+
+body.dark-mode .container {
+    background: #2a2a2a;
+    color: #f1f1f1;
+}
+
+/* Chart container styling in dark mode */
+body.dark-mode .chart-container {
+    background: #333333;
+}
+
+body.dark-mode h2, body.dark-mode label {
     color: #89c2d9;
 }
 
+/* Dark Mode for inputs and buttons */
 body.dark-mode input[type="text"],
 body.dark-mode select {
     background: #333333;

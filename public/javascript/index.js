@@ -29,15 +29,51 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Form submission
-    form.addEventListener('submit', function (event) {
+    form.addEventListener('submit', async function (event) {
         event.preventDefault();
-        // Your existing logic for adding/checking holdings
-        console.log('Form submitted');
-        // You can add more functionality here
+    
+        const username = document.getElementById('username').value.trim();
+        const holdingName = document.getElementById('holdingName').value.trim();
+        const holdingType = document.getElementById('holdingType').value;
+        const stockSymbol = document.getElementById('stockSymbol').value.trim();
+    
+        if (!username || !holdingName || !holdingType || (holdingType === 'stock' && !stockSymbol)) {
+            alert('Please fill out all required fields.');
+            return;
+        }
+    
+        try {
+            // Prepare the data to be sent to the server
+            const holdingData = {
+                username: username,
+                holdingName: holdingName,
+                holdingType: holdingType,
+                stockSymbol: holdingType === 'stock' ? stockSymbol : null
+            };
+    
+            // Send the data to the server
+            const response = await fetch('/api/addHolding', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(holdingData)
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to add holding');
+            }
+    
+            const result = await response.json();
+            alert('Holding added successfully!');
+            form.reset(); // Clear the form
+    
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while adding the holding. Please try again.');
+        }
     });
 
-    // Check all holdings
     checkAllHoldingsButton.addEventListener('click', async function (event) {
         event.preventDefault();
     
@@ -47,16 +83,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!response.ok) {
                 throw new Error('Failed to fetch holdings');
             }
-            
-            // Save the holdings data in sessionStorage
+    
             const results = await response.json();
             sessionStorage.setItem('holdingsData', JSON.stringify(results));
-            
-            // Redirect to the results page
             window.location.href = '/results.html';
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while fetching your holdings.');
+            alert('An error occurred while fetching your holdings. Please try again later or check your internet connection.');
         }
-    });
+    });    
 });

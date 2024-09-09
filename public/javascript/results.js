@@ -1,20 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const toggleDarkModeButton = document.getElementById('toggleDarkModeButton');
-
-    // Toggle dark mode
-    toggleDarkModeButton.addEventListener('click', function () {
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        localStorage.setItem('darkMode', isDarkMode);
-        updateDarkModeStyles(isDarkMode);
-    });
-
-    // Check for saved dark mode preference
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (savedDarkMode) {
-        document.body.classList.add('dark-mode');
-    }
-    updateDarkModeStyles(savedDarkMode);
+    let isDarkMode = localStorage.getItem('darkMode') === 'true';
 
     // Function to update styles based on dark mode
     function updateDarkModeStyles(isDarkMode) {
@@ -26,6 +12,25 @@ document.addEventListener('DOMContentLoaded', async function () {
             toggleDarkModeButton.textContent = 'Toggle Dark Mode';
         }
     }
+
+    // Update the chart when toggling dark mode
+    toggleDarkModeButton.addEventListener('click', function () {
+        document.body.classList.toggle('dark-mode');
+        isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+        updateDarkModeStyles(isDarkMode);
+        // Update charts
+        const holdingsData = JSON.parse(sessionStorage.getItem('holdingsData'));
+        holdingsData.forEach(result => {
+            renderChart(`chart-${result.holding.symbol}`, result.performanceData, isDarkMode);
+        });
+    });
+
+    // Check for saved dark mode preference
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+    updateDarkModeStyles(isDarkMode);
 
     // The rest of your existing logic to load holdings...
     try {
@@ -98,17 +103,27 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
 
             if (result.performanceData && result.performanceData.length > 0) {
-                renderChart(`chart-${result.holding.symbol}`, result.performanceData);
+                renderChart(`chart-${result.holding.symbol}`, result.performanceData, isDarkMode);
             }
         });
     } catch (error) {
         console.error('Error fetching results:', error);
-        alert('An error occurred while checking your holdings.');
+        alert('An error occurred while checking your holdings. Please try refreshing the page or check your internet connection.');
     }
 });
 
-function renderChart(canvasId, performanceData) {
+function renderChart(canvasId, performanceData, isDarkMode) {
     const ctx = document.getElementById(canvasId).getContext('2d');
+    const chartColors = isDarkMode ? {
+        backgroundColor: '#333333',
+        textColor: '#f1f1f1',
+        borderColor: '#5c6ac4'
+    } : {
+        backgroundColor: '#ffffff',
+        textColor: '#333',
+        borderColor: '#3A7CA5'
+    };
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -116,7 +131,7 @@ function renderChart(canvasId, performanceData) {
             datasets: [{
                 label: 'Closing Prices Over the Last 30 Days',
                 data: performanceData.map(point => point.value),
-                borderColor: '#3A7CA5',
+                borderColor: chartColors.borderColor,
                 fill: false,
                 tension: 0.1
             }]
@@ -126,13 +141,21 @@ function renderChart(canvasId, performanceData) {
                 x: {
                     title: {
                         display: true,
-                        text: 'Date'
+                        text: 'Date',
+                        color: chartColors.textColor
+                    },
+                    ticks: {
+                        color: chartColors.textColor
                     }
                 },
                 y: {
                     title: {
                         display: true,
-                        text: 'Value ($)'
+                        text: 'Value ($)',
+                        color: chartColors.textColor
+                    },
+                    ticks: {
+                        color: chartColors.textColor
                     }
                 }
             },
@@ -143,8 +166,14 @@ function renderChart(canvasId, performanceData) {
                             return `Closing: $${tooltipItem.raw.toFixed(2)}`;
                         }
                     }
+                },
+                legend: {
+                    labels: {
+                        color: chartColors.textColor
+                    }
                 }
-            }
+            },
+            backgroundColor: chartColors.backgroundColor
         }
     });
 }
