@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const path = require('path');
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -10,13 +10,11 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// MongoDB connection
 const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Define User model
 const userSchema = new mongoose.Schema({
   username: String,
   holdings: Array,
@@ -24,13 +22,12 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// Utility function to fetch news articles
 async function fetchNewsArticles(holding) {
   try {
     const response = await axios.get(`https://newsapi.org/v2/everything?q=${holding.name}&apiKey=${process.env.NEWS_API_KEY}&language=en`);
     return response.data.articles.map(article => ({
       title: article.title,
-      sentiment: 'neutral' // Placeholder for sentiment analysis logic
+      sentiment: 'neutral'
     }));
   } catch (error) {
     console.error(`Error fetching news for ${holding.name}:`, error);
@@ -38,13 +35,11 @@ async function fetchNewsArticles(holding) {
   }
 }
 
-// Utility function to fetch performance data
 async function fetchPerformanceData(holding) {
   try {
     let response;
 
     if (holding.type === 'stock') {
-      // Use Alpha Vantage API for stocks
       response = await axios.get(`https://www.alphavantage.co/query`, {
         params: {
           function: 'TIME_SERIES_DAILY',
@@ -55,10 +50,10 @@ async function fetchPerformanceData(holding) {
 
       if (response.data['Time Series (Daily)']) {
         const timeSeries = response.data['Time Series (Daily)'];
-        const dates = Object.keys(timeSeries).slice(0, 30).reverse(); // Last 30 days
+        const dates = Object.keys(timeSeries).slice(0, 30).reverse();
         const performanceData = dates.map(date => ({
           date,
-          value: parseFloat(timeSeries[date]['4. close']) // Closing price
+          value: parseFloat(timeSeries[date]['4. close'])
         }));
 
         return performanceData;
@@ -68,7 +63,6 @@ async function fetchPerformanceData(holding) {
       }
 
     } else if (holding.type === 'crypto') {
-      // Use CoinGecko API for cryptocurrencies
       response = await axios.get(`https://api.coingecko.com/api/v3/coins/${holding.symbol}/market_chart`, {
         params: {
           vs_currency: 'usd',
@@ -98,7 +92,6 @@ async function fetchPerformanceData(holding) {
   }
 }
 
-// API endpoint to analyze user holdings
 app.get('/api/analyze', async (req, res) => {
   try {
     const username = req.query.username;
@@ -137,15 +130,12 @@ app.post('/api/addHolding', async (req, res) => {
           return res.status(400).json({ error: 'Invalid input' });
       }
 
-      // Find the user
       let user = await User.findOne({ username });
 
-      // If user doesn't exist, create a new one
       if (!user) {
           user = new User({ username, holdings: [] });
       }
 
-      // Add the new holding
       user.holdings.push({ name: holdingName, type: holdingType, symbol: stockSymbol });
       await user.save();
 
@@ -156,7 +146,6 @@ app.post('/api/addHolding', async (req, res) => {
   }
 });
 
-// Serve HTML files
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/html/index.html'));
 });

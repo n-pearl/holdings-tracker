@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     const toggleDarkModeButton = document.getElementById('toggleDarkModeButton');
     let isDarkMode = localStorage.getItem('darkMode') === 'true';
 
-    // Function to update styles based on dark mode
     function updateDarkModeStyles(isDarkMode) {
         if (isDarkMode) {
             document.body.classList.add('dark-mode');
@@ -13,32 +12,28 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-    // Update the chart when toggling dark mode
     toggleDarkModeButton.addEventListener('click', function () {
         document.body.classList.toggle('dark-mode');
         isDarkMode = document.body.classList.contains('dark-mode');
         localStorage.setItem('darkMode', isDarkMode);
         updateDarkModeStyles(isDarkMode);
-        // Update charts
         const holdingsData = JSON.parse(sessionStorage.getItem('holdingsData'));
         holdingsData.forEach(result => {
             renderChart(`chart-${result.holding.symbol}`, result.performanceData, isDarkMode);
         });
     });
 
-    // Check for saved dark mode preference
     if (isDarkMode) {
         document.body.classList.add('dark-mode');
     }
     updateDarkModeStyles(isDarkMode);
 
-    // The rest of your existing logic to load holdings...
     try {
         const holdingsData = JSON.parse(sessionStorage.getItem('holdingsData'));
         if (!holdingsData) throw new Error('No holdings data found');
 
         const resultsContainer = document.getElementById('resultsContainer');
-        resultsContainer.innerHTML = ''; // Clear any previous content
+        resultsContainer.innerHTML = '';
 
         holdingsData.forEach(result => {
             const resultElement = document.createElement('div');
@@ -65,18 +60,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             const articlesList = document.createElement('ul');
             articlesList.className = 'articles-list text-gray-700 dark:text-gray-300';
-            articlesList.style.maxHeight = '150px'; // Default max height for collapsed state
-            articlesList.style.overflow = 'hidden'; // Hide overflow for collapsed state
+            articlesList.style.maxHeight = '150px';
+            articlesList.style.overflow = 'hidden';
             
-            // Render all articles, but only show first 5 initially
             result.articles.forEach((article, index) => {
                 const listItem = document.createElement('li');
                 listItem.textContent = `${article.title} - Sentiment: ${article.sentiment}`;
                 articlesList.appendChild(listItem);
-                if (index >= 5) listItem.style.display = 'none'; // Hide articles beyond the first 5
+                if (index >= 5) listItem.style.display = 'none';
             });
             
-            // Keep track of whether the list is expanded
             let isExpanded = false;
 
             resultElement.appendChild(articlesList);
@@ -86,17 +79,15 @@ document.addEventListener('DOMContentLoaded', async function () {
             toggleButton.addEventListener('click', () => {
                 const articleItems = articlesList.querySelectorAll('li');
                 if (isExpanded) {
-                    // Collapse to the first 5 articles
                     articleItems.forEach((item, index) => {
                         if (index >= 5) item.style.display = 'none';
                     });
-                    articlesList.style.maxHeight = '150px'; // Set to default height
-                    resultElement.classList.remove('card-expanded'); // Remove expanded class
+                    articlesList.style.maxHeight = '150px';
+                    resultElement.classList.remove('card-expanded');
                 } else {
-                    // Expand to show all articles
                     articleItems.forEach(item => item.style.display = 'list-item');
-                    articlesList.style.maxHeight = 'none'; // Remove max height to expand
-                    resultElement.classList.add('card-expanded'); // Add expanded class
+                    articlesList.style.maxHeight = 'none';
+                    resultElement.classList.add('card-expanded');
                 }
                 isExpanded = !isExpanded;
                 toggleButton.classList.toggle('rotate');

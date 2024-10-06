@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('holdingForm');
     const checkAllHoldingsButton = document.getElementById('checkAllHoldingsButton');
 
-    // Toggle dark mode
     toggleDarkModeButton.addEventListener('click', function () {
         document.body.classList.toggle('dark-mode');
         const isDarkMode = document.body.classList.contains('dark-mode');
@@ -11,14 +10,12 @@ document.addEventListener('DOMContentLoaded', function () {
         updateDarkModeStyles(isDarkMode);
     });
 
-    // Check for saved dark mode preference
     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
     if (savedDarkMode) {
         document.body.classList.add('dark-mode');
     }
     updateDarkModeStyles(savedDarkMode);
 
-    // Function to update styles based on dark mode
     function updateDarkModeStyles(isDarkMode) {
         if (isDarkMode) {
             document.body.classList.add('dark-mode');
@@ -43,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     
         try {
-            // Prepare the data to be sent to the server
             const holdingData = {
                 username: username,
                 holdingName: holdingName,
@@ -51,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 stockSymbol: holdingType === 'stock' ? stockSymbol : null
             };
     
-            // Send the data to the server
             const response = await fetch('/api/addHolding', {
                 method: 'POST',
                 headers: {
